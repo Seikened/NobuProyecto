@@ -1,0 +1,183 @@
+/* Variables para colores y sombras para ambos temas */
+:root {
+    --clr-primary-light: #FFE6E6; /* Fondo para tema claro */
+    --clr-secondary-light: #E1AFD1; /* Color secundario para tema claro */
+    --clr-primary-dark: #7469B6; /* Fondo para tema oscuro */
+    --clr-secondary-dark: #AD88C6; /* Color secundario para tema oscuro */
+    --clr-text-light: #7469B6; /* Texto para tema claro */
+    --clr-text-dark: #FFE6E6; /* Texto para tema oscuro */
+}
+
+/* Estilos generales del cuerpo */
+body {
+    font-family: 'Cascadia Code', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Estilos para tema claro */
+body.claro {
+    --background-color: var(--clr-primary-light);
+    --text-color: var(--clr-text-light);
+    --box-bg: var(--clr-secondary-light);
+    --box-shadow: rgba(116, 105, 182, 0.2);
+}
+
+/* Estilos para tema oscuro */
+body.oscuro {
+    --background-color: var(--clr-primary-dark);
+    --text-color: var(--clr-text-dark);
+    --box-bg: var(--clr-secondary-dark);
+    --box-shadow: rgba(255, 230, 230, 0.2);
+}
+
+/* Estilos para botón */
+#obtener-tareas {
+    background: var(--box-bg);
+    color: var(--text-color);
+    border: 2px solid transparent;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px auto;
+    display: block;
+    font-size: 1.2em;
+    transition: background 0.3s, border-color 0.3s, transform 0.1s;
+}
+
+#obtener-tareas:hover {
+    border-color: var(--text-color);
+    background: var(--text-color);
+    color: var(--background-color);
+}
+
+#obtener-tareas:active {
+    transform: translateY(2px);
+}
+
+
+@keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+}
+
+
+.tarea {
+    /* Tus otros estilos */
+    background: var(--box-bg);
+    margin: 20px auto;
+    width: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow);
+    color: var(--text-color);
+    transition: background 0.3s, box-shadow 0.3s, color 0.3s;
+    /* Agrega la animación */
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.tarea.visible {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+
+/* Estilos para elementos de tarjetas */
+.tarea__id,
+.tarea__evento,
+.tarea__fecha,
+.tarea__descripcion,
+.tarea__materia,
+.tarea__estado {
+    padding: 5px 0;
+    font-size: 1em;
+}
+
+.tarea__evento {
+    color: var(--text-color);
+    font-size: 1.4em;
+    font-weight: 500;
+}
+
+.tarea__descripcion {
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Estilos para contenedor de tiempo restante */
+.tiempo__restante {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 10px;
+    background: var(--box-bg);
+}
+
+.tarea__dias,
+.tarea__horas,
+.tarea__minutos {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Estilos para los estados de las tareas */
+/*El estado pendiente es un boton para darle estulos y normalizarlo como el de obtener-tareas y con hover*/
+.estado-tarea-pendiente {
+    background: var(--box-bg);
+    color: var(--text-color);
+    border: 2px solid transparent;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 20px auto;
+    display: block;
+    font-size: 1.2em;
+    transition: background 0.3s, border-color 0.3s, transform 0.1s;
+}
+
+.estado-tarea-pendiente:hover {
+    border-color: var(--text-color);
+    background: var(--text-color);
+    color: var(--background-color);
+}
+
+.estado-tarea-finalizada {
+    color: #2ecc71;
+}
+
+.estado-tarea-desconocido {
+    color: #e74c3c;
+}
+
+/* Agrega una transición para el cambio de colores */
+.estado-tarea-pendiente,
+.estado-tarea-finalizada,
+.estado-tarea-desconocido {
+    transition: color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        --background-color: var(--clr-dark-background);
+        --text-color: var(--clr-dark-text);
+        --box-bg: var(--clr-dark-box-bg);
+        --box-shadow: var(--clr-dark-shadow);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        --background-color: var(--clr-light-background);
+        --text-color: var(--clr-light-text);
+        --box-bg: var(--clr-light-box-bg);
+        --box-shadow: var(--clr-light-shadow);
+    }
+}

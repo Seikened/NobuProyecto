@@ -1,0 +1,53 @@
+{
+  "name": "nobu",
+  "version": "1.1.0",
+  "description": "Gestor de tareas que replica moodle de Ibero pero con mejoras",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "nobu",
+    "task-manager",
+    "productivity"
+  ],
+  "author": "Fernando Leon Franco",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.3.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.nobu.taskmanager",
+    "productName": "Nobu",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "renderer.js",
+      "styles/",
+      "python/**/*",
+      "scripts/**/*",
+      "pyDiez/**/*",
+      "node_modules/**/*",
+      "!**/*.{ts,tsx,js.map,o,hprof,orig,pyc,pyo,rbc}",
+      "!*.{code-workspace,DS_Store,gitkeep}",
+      "!**/{.gitignore,.git,.hg,.svn,CVS,RCS,SCCS,__pycache__,thumbs.db,.Spotlight-V100,ehthumbs.db}",
+      "!**/{test,__tests__,tests,powered-test,example,examples,CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+    ],
+    "asar": false,
+    "asarUnpack": [
+      "python/**/*",
+      "pyDiez/**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    }
+  }
+}
