@@ -156,20 +156,9 @@ def main():
     #==================================== PARTE 1 ====================================#
     # Incializar las clases
     baulDeTareas = BaulTareas()
-    # Preparar el navegador y nuestra ruta
-    path_document_system,sistema = obtener_ruta_documentos()
 
-    tipo_google_drive = ''
 
-    if sistema == 'Windows':
-        tipo_google_drive = 'chromedriver.exe'
-    else:
-        tipo_google_drive = 'chromedriver_apple'
-
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    path_chrome_drive = os.path.join(script_directory, "dependencias", tipo_google_drive)
-
-    driver = ConfiguracionNavegador(path_chrome_drive).driver
+    driver = ConfiguracionNavegador().driver
     #==================================== FIN DE PARTE 1 ====================================#
 
     #==================================== PARTE 2 ====================================#
@@ -181,8 +170,6 @@ def main():
 
     IniciarSesion(username, password,driver)
 
-    crear_carpetas(path_document_system,username)
-    ruta_archivo = os.path.join(path_document_system,nombreArchivo)
 
     # Vamos a verificar si hay archivos existiendo en la carpeta de documentos
     #==================================== FIN DE PARTE 2 ====================================#

@@ -1,7 +1,25 @@
 from datetime import datetime, timedelta
 import os
 
+
+def normalizar_dia(dia):
+    dia = dia.lower()
+    dias_norm = {
+        'lunes': 'lunes',
+        'martes': 'martes',
+        'miércoles': 'miercoles',
+        'miercoles': 'miercoles',
+        'jueves': 'jueves',
+        'viernes': 'viernes',
+        'sábado': 'sabado',
+        'sabado': 'sabado',
+        'domingo': 'domingo'
+    }
+    return dias_norm.get(dia, dia)
+
+
 def obtener_proximo_dia(dia_semana): #lunes
+    dia_semana = normalizar_dia(dia_semana)
     # Diccionario para convertir los nombres de los días a números (0= Lunes, 6= Domingo)
     dias = {
         "lunes": 0,

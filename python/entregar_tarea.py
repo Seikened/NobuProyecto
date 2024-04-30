@@ -1,4 +1,5 @@
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -18,20 +19,8 @@ def entregarTarea(idTarea, ruta_archivo, username, password):
     #==================================== PARTE 1 ====================================#
     # Incializar las clases
     baulDeTareas = BaulTareas()
-    # Preparar el navegador y nuestra ruta
-    path_document_system,sistema = obtener_ruta_documentos()
 
-    tipo_google_drive = ''
-
-    if sistema == 'Windows':
-        tipo_google_drive = 'chromedriver.exe'
-    else:
-        tipo_google_drive = 'chromedriver_apple'
-
-    script_directory = os.path.dirname(os.path.abspath(__file__))
-    path_chrome_drive = os.path.join(script_directory, "dependencias", tipo_google_drive)
-
-    driver = ConfiguracionNavegador(path_chrome_drive).driver
+    driver = ConfiguracionNavegador().driver
     #==================================== FIN DE PARTE 1 ====================================#
 
     #==================================== PARTE 2 ====================================#
