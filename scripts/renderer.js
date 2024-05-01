@@ -106,20 +106,58 @@ document.getElementById('pre-registro-form').addEventListener('submit', function
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if (username && password) { // Simple verificación de llenado
+    if (username && password) {
         usuarioActual.username = username;
         usuarioActual.password = password;
-        usuarioActual.isAuthenticated = true; // Marcar como autenticado
+        usuarioActual.isAuthenticated = true;
 
-        ipcRenderer.send('pre-registro', usuarioActual); 
-
-        console.log(`Pre-registro con usuario: ${username}`);
+        // Ocultar el formulario y mostrar el botón de tareas
+        document.querySelector('.login-container').classList.add('hidden');
         document.getElementById('obtener-tareas').classList.remove('hidden');
         document.getElementById('container-tareas').classList.remove('hidden');
+
+        ipcRenderer.send('guardar-sesion', usuarioActual);
+        console.log(`Pre-registro con usuario: ${username}`);
     } else {
         console.log("Debe llenar ambos campos, usuario y contraseña.");
     }
 });
+
+
+// Evento para limpiar la sesión
+document.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.send('cargar-sesion');
+});
+
+ipcRenderer.on('sesion-cargada', (event, usuario) => {
+    if (usuario && usuario.isAuthenticated) {
+        actualizarUI(true); // Actualiza la UI para mostrar que el usuario está logueado
+    } else {
+        actualizarUI(false); // Mostrar interfaz de login
+    }
+});
+
+function actualizarUI(isAuthenticated) {
+    const loginContainer = document.querySelector('.login-container');
+    const tareasContainer = document.getElementById('container-tareas');
+    const obtenerTareasBtn = document.getElementById('obtener-tareas');
+
+    if (isAuthenticated) {
+        loginContainer.classList.add('hidden');
+        obtenerTareasBtn.classList.remove('hidden');
+        tareasContainer.classList.remove('hidden');
+    } else {
+        loginContainer.classList.remove('hidden');
+        obtenerTareasBtn.classList.add('hidden');
+        tareasContainer.classList.add('hidden');
+    }
+}
+document.getElementById('cerrar-sesion').addEventListener('click', cerrarSesion);
+function cerrarSesion() {
+    ipcRenderer.send('limpiar-sesion');
+    usuarioActual = { username: '', password: '', isAuthenticated: false };  // Restablecer el objeto de usuario
+    actualizarUI(false);  // Actualizar la interfaz de usuario para reflejar que el usuario no está autenticado
+}
 
 
 

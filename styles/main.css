@@ -69,6 +69,63 @@ body.oscuro {
     }
 }
 
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Asegura que el contenedor tome al menos el alto de la pantalla */
+    padding: 20px; /* Espacio alrededor del formulario para no pegar a los bordes de la ventana */
+}
+
+.formulario {
+    width: 100%; /* Ajusta esto según la anchura deseada, puede ser en % o px */
+    max-width: 360px; /* Establece un ancho máximo para dispositivos grandes */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow);
+    background: var(--box-bg);
+}
+
+.input-texto {
+    padding: 8px;
+    border: 2px solid var(--text-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color);
+    background: transparent;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-texto:focus {
+    outline: none;
+    border-color: var(--clr-secondary-dark);
+    box-shadow: 0 2px 4px var(--box-shadow);
+}
+
+.boton-enviar {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    color: var(--background-color);
+    background: var(--text-color);
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+}
+
+.boton-enviar:hover {
+    background: var(--clr-secondary-light);
+    color: var(--clr-primary-dark);
+}
+
+.boton-enviar:active {
+    transform: translateY(2px);
+}
+
+
 
 .tarea {
     /* Tus otros estilos */

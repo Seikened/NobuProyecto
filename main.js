@@ -173,3 +173,66 @@ ipcMain.on('entregar-tarea', (event, { idTarea, filePaths, usuario }) => {
     console.log(`Proceso de Python para entregar tarea finalizado con código ${code}`);
   });
 });
+
+// esto es para guardar la sesion del usuario
+const sessionFilePath = path.join(app.getPath('userData'), 'session.json');
+
+// Función mejorada para guardar la sesión del usuario
+function guardarSesion(usuario) {
+    try {
+        fs.writeFileSync(sessionFilePath, JSON.stringify(usuario), 'utf-8');
+        console.log("Sesión guardada correctamente en:", sessionFilePath);  // Confirma que la sesión se guardó
+    } catch (error) {
+        console.error("Error al guardar la sesión:", error);  // Muestra errores si la escritura falla
+    }
+}
+
+// Función mejorada para cargar la sesión del usuario
+function cargarSesion() {
+    try {
+        const data = fs.readFileSync(sessionFilePath, 'utf-8');
+        console.log("Sesión cargada correctamente desde:", sessionFilePath);  // Confirma que la sesión se cargó
+        return JSON.parse(data);
+    } catch (error) {
+        console.error("Error al cargar la sesión:", error);  // Maneja errores de lectura
+        return null;
+    }
+}
+
+// Función mejorada para limpiar la sesión del usuario
+function limpiarSesion() {
+    try {
+        if (fs.existsSync(sessionFilePath)) {
+            fs.unlinkSync(sessionFilePath);
+            console.log("Sesión eliminada correctamente");  // Confirma la eliminación
+        }
+    } catch (error) {
+        console.error("Error al eliminar la sesión:", error);  // Maneja posibles errores de eliminación
+    }
+}
+
+ipcMain.on('guardar-sesion', (event, usuario) => {
+    guardarSesion(usuario);
+    console.log("Guardando usuario:", usuario);  // Muestra qué usuario se está guardando
+});
+
+ipcMain.on('cargar-sesion', (event) => {
+    const usuario = cargarSesion();
+    event.reply('sesion-cargada', usuario);
+    console.log("Enviando usuario cargado:", usuario);  // Muestra el usuario cargado
+});
+
+ipcMain.on('limpiar-sesion', () => {
+  limpiarSesion();
+});
+
+function limpiarSesion() {
+  try {
+      if (fs.existsSync(sessionFilePath)) {
+          fs.unlinkSync(sessionFilePath);
+          console.log("Sesión eliminada correctamente.");
+      }
+  } catch (error) {
+      console.error("Error al eliminar la sesión:", error);
+  }
+}
