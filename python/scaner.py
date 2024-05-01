@@ -30,9 +30,9 @@ def imprimir_arbol(directorio, prefijo='', blacklist=None):
 
 # Función principal que solicita la ruta y ejecuta la función de imprimir el árbol
 def main():
-    ruta = "/Users/fernandoleonfranco/Documents/Github/ELECTRON"
+    ruta = "/Users/fernandoleonfranco/Documents/GitHub/NobuProyecto"
     # Lista de elementos a ignorar (modificar según tus necesidades)
-    blacklist = ['node_modules', '.git', 'target', '__pycache__', 'GestorPropiedades.code-workspace','lib']
+    blacklist = ['node_modules', '.git', 'target', '__pycache__', 'GestorPropiedades.code-workspace','lib','dist']
     print(f"Árbol de directorios para {ruta}:")
     imprimir_arbol(ruta, blacklist=blacklist)
 

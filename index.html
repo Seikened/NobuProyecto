@@ -9,10 +9,18 @@
     <title>NOBU ☁️</title>
 </head>
 <body class="claro">
-    <!-- ... otros elementos HTML ... -->
 
-    <button id="obtener-tareas">Obtener Tareas</button>
-    <div id="container-tareas"></div>
+    <div class="login-container">
+        <form id="pre-registro-form">
+            <input type="text" id="username" placeholder="Nombre de usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Pre-registro</button>
+        </form>
+    </div>
+
+
+    <button id="obtener-tareas" class="hidden">Obtener Tareas</button>
+    <div id="container-tareas" class="hidden"></div>
 
     <script src="scripts/renderer.js"></script>
 </body>

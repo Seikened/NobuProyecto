@@ -164,6 +164,11 @@ body.oscuro {
     transition: color 0.3s;
 }
 
+
+.hidden {
+    display: none;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         --background-color: var(--clr-dark-background);

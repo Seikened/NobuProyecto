@@ -10,6 +10,7 @@ from regularExpression import datos_descripcion
 import os
 import platform
 import json
+import argparse
 
 
 #========================= CLASES =========================#
@@ -152,7 +153,7 @@ def crear_carpetas(path_document_system, nombre_carpeta="MATERIAS_IBERO"):
     ruta = os.path.join(path_document_system,"TAREAS_"+nombre_carpeta)
     os.makedirs(ruta,exist_ok = True)
 #========================= FIN DE FUNCIONES =========================#
-def main():
+def main(username,password):
     #==================================== PARTE 1 ====================================#
     # Incializar las clases
     baulDeTareas = BaulTareas()
@@ -163,20 +164,14 @@ def main():
 
     #==================================== PARTE 2 ====================================#
     # Parte 2: Inicio de sesión
-    username = '192488-7'
-    password =  'Ftry2131*'#input("Introduce tu contraseña: ")
-    nombreArchivo = 'Investigacion sobre Logaritmos y Antilogaritmos.pdf' #'FERNANDO_TAREAS.txt'
-    numeroTarea = 4
 
     IniciarSesion(username, password,driver)
-
 
     # Vamos a verificar si hay archivos existiendo en la carpeta de documentos
     #==================================== FIN DE PARTE 2 ====================================#
 
     #==================================== PARTE 3 ====================================#
     # Parte 3: Navegación a la página del calendario y selección del evento
-    #print("Navegando a la página del calendario...") 
 
     driver.get('https://cursos.iberoleon.mx/online/calendar/view.php') # esto  navega a la página que le pongas como argumento
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "eventlist")))
@@ -223,4 +218,8 @@ def main():
     return "Fin del programa"
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Login and fetch tasks.")
+    parser.add_argument('--username', type=str, required=True, help='User name')
+    parser.add_argument('--password', type=str, required=True, help='Password')
+    args = parser.parse_args()
+    main(args.username, args.password)

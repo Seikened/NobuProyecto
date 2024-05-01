@@ -93,31 +93,76 @@ function actualizarTiempoRestante(tareaDiv, fechaEntrega, intervalId) {
 
 
 
+// Login
+let usuarioActual = {
+    username: '',
+    password: '',
+    isAuthenticated: false
+};
+
+document.getElementById('pre-registro-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username && password) { // Simple verificación de llenado
+        usuarioActual.username = username;
+        usuarioActual.password = password;
+        usuarioActual.isAuthenticated = true; // Marcar como autenticado
+
+        ipcRenderer.send('pre-registro', usuarioActual); 
+
+        console.log(`Pre-registro con usuario: ${username}`);
+        document.getElementById('obtener-tareas').classList.remove('hidden');
+        document.getElementById('container-tareas').classList.remove('hidden');
+    } else {
+        console.log("Debe llenar ambos campos, usuario y contraseña.");
+    }
+});
+
+
+
+
 // Escuchar el evento 'entregar-tareas' del proceso principal
 ipcRenderer.on('entregar-tareas', (event, data) => {
     console.log('Datos recibidos con éxito:');
-
-    if (!data.trim()) {
-        console.error("La entrada JSON está vacía");
-        // Manejar la situación aquí, como mostrar un mensaje de error al usuario
-        return;
-    }
-
-    try {
-        const tareas = JSON.parse(data);
-        if (Array.isArray(tareas)) { // Verifica si tareas es realmente un arreglo
-            mostrarTareas(tareas); // Si es un arreglo, procede a mostrar las tareas
-        } else {
-            throw new Error("La entrada parseada no es un arreglo"); // Lanza un error si no es un arreglo
+    if(usuarioActual.isAuthenticated){
+        if (!data.trim()) {
+            console.error("La entrada JSON está vacía");
+            // Manejar la situación aquí, como mostrar un mensaje de error al usuario
+            return;
         }
-    } catch (error) {
-        console.error("Error parseando JSON:", error);
-        // Manejar el error aquí, como mostrar un mensaje de error al usuario
+
+        try {
+            const tareas = JSON.parse(data);
+            if (Array.isArray(tareas)) { // Verifica si tareas es realmente un arreglo
+                mostrarTareas(tareas); // Si es un arreglo, procede a mostrar las tareas
+            } else {
+                throw new Error("La entrada parseada no es un arreglo"); // Lanza un error si no es un arreglo
+            }
+        } catch (error) {
+            console.error("Error parseando JSON:", error);
+            // Manejar el error aquí, como mostrar un mensaje de error al usuario
+        }
     }
-
-
-
+    else{
+        console.log('Por favor, registre sus credenciales antes de entregar tareas.');
+    }
 });
+
+
+// Evento para entregar la tarea
+function entregarTarea(idTarea) {
+    ipcRenderer.invoke('dialog:openFile', { idTarea }).then((result) => {
+        if (!result.canceled && result.filePaths) {
+        console.log(result.filePaths);
+        ipcRenderer.send('entregar-tarea', { idTarea, filePaths: result.filePaths, usuario: usuarioActual });
+        }
+    }).catch(err => {
+        console.log(err);
+    });
+    }
 
 
 
@@ -155,8 +200,12 @@ ipcRenderer.on('cambiar-tema', (event, tema) => {
 
 // Evento para el botón de obtener tareas
 document.getElementById('obtener-tareas').addEventListener('click', () => {
-    ipcRenderer.send('solicitar-tareas'); // Solicitar al proceso principal que ejecute el script de Python
-    console.log('Solicitando tareas...');
+    if (usuarioActual.isAuthenticated) {
+        ipcRenderer.send('solicitar-tareas', usuarioActual);
+        console.log('Solicitando tareas...');
+    } else {
+        console.log('Por favor, registre sus credenciales antes de solicitar tareas.');
+    }
 });
 
 
@@ -177,17 +226,3 @@ function verificar_tarea(idTarea, estado) {
 
     return botonHTML;
 }
-
-// Evento para entregar la tarea
-function entregarTarea(idTarea) {
-ipcRenderer.invoke('dialog:openFile', { idTarea }).then((result) => {
-    if (!result.canceled && result.filePaths) {
-    console.log(result.filePaths);
-    ipcRenderer.send('entregar-tarea', { idTarea, filePaths: result.filePaths });
-    }
-}).catch(err => {
-    console.log(err);
-});
-}
-
-

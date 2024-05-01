@@ -5,8 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 
-const username = '192488-7';
-const password = 'Ftry2131*';
+
 
 // Determina si la aplicación está empaquetada o en desarrollo
 const isPackaged = app.isPackaged;
@@ -53,10 +52,13 @@ app.whenReady().then(() => {
   createWindow();
 });
 
-ipcMain.on('solicitar-tareas', (event) => {
-  console.log('Solicitando ejecución de script de Python...');
-  
-  exec(`"${pythonExecutable}" "${pythonScriptPathNobu}"`, (error, stdout, stderr) => {
+ipcMain.on('solicitar-tareas', (event, usuario) => {
+  console.log('Solicitando ejecución de script de Python con usuario:', usuario.username, ' con', usuario.password);
+
+  // Modifica la línea del comando para incluir el nombre de usuario y la contraseña
+  const command = `"${pythonExecutable}" "${pythonScriptPathNobu}" --username "${usuario.username}" --password "${usuario.password}"`;
+
+  exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error ejecutando Python: ${error.message}`);
       event.reply('entregar-tareas', JSON.stringify({ error: error.message }));
@@ -70,14 +72,14 @@ ipcMain.on('solicitar-tareas', (event) => {
 
     console.log('Script de Python ejecutado correctamente, enviando datos al renderizador...');
     
-    // Aquí se procesa la salida del script de Python para encontrar la línea que contiene el JSON
-    const lines = stdout.split('\n'); // Divide la salida en líneas
-    const jsonLines = lines.filter(line => line.trim().startsWith('[') && line.trim().endsWith(']')); // Filtra solo las líneas que parecen ser JSON
-    
+    // Procesa la salida del script de Python para encontrar la línea que contiene el JSON
+    const lines = stdout.split('\n');
+    const jsonLines = lines.filter(line => line.trim().startsWith('[') && line.trim().endsWith(']'));
+
     if (jsonLines.length > 0) {
-      console.log('JSON Lines:', jsonLines); // Imprime para verificar
+      console.log('JSON Lines:', jsonLines);
       jsonLines.forEach(jsonLine => {
-        event.reply('entregar-tareas', jsonLine.trim()); // Envía solo las líneas de JSON, asegurándose de que están limpias de espacios en blanco
+        event.reply('entregar-tareas', jsonLine.trim());
       });
     } else {
       console.error('No se encontró la línea de JSON en la salida del script.');
@@ -85,6 +87,7 @@ ipcMain.on('solicitar-tareas', (event) => {
     }
   });
 });
+
 
 
 
@@ -120,12 +123,11 @@ ipcMain.handle('dialog:openFile', async (event, { idTarea }) => {
 });
 
 
+// ACTUALIZAR EL MANEJO DEL RENDERER Y SU ENVIO DE DATOS DEL USUARIO PARA QUE SE ENVIE LA TAREA
 
-
-ipcMain.on('entregar-tarea', (event, { idTarea, filePaths }) => {
+ipcMain.on('entregar-tarea', (event, { idTarea, filePaths, usuario }) => {
   // Construye el comando para ejecutar el script de Python
-  const command = `"${pythonExecutable}" "${pythonScriptPatEntrega}" ${idTarea} "${filePaths[0]}" --username "${username}" --password "${password}"`;
-
+  const command = `"${pythonExecutable}" "${pythonScriptPatEntrega}" ${idTarea} "${filePaths[0]}" --username "${usuario.username}" --password "${usuario.password}"`;
   const pythonProcess = exec(command, (error, stdout, stderr) => {
     if (error) {
       console.error(`Error ejecutando Python: ${error.message}`);
@@ -142,7 +144,9 @@ ipcMain.on('entregar-tarea', (event, { idTarea, filePaths }) => {
     event.reply('tarea-entregada', stdout); // Envía el resultado de vuelta al renderizador
 
     // Aquí agregas el código para solicitar nuevamente la lista de tareas
-    exec(`"${pythonExecutable}" "${pythonScriptPathNobu}"`, (error, stdout, stderr) => {
+    // Asegúrate de incluir el nombre de usuario y la contraseña cuando vuelves a solicitar la lista de tareas
+    const refreshCommand = `"${pythonExecutable}" "${pythonScriptPathNobu}" --username "${usuario.username}" --password "${usuario.password}"`;
+    exec(refreshCommand, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error al solicitar tareas después de entregar: ${error.message}`);
         return;
